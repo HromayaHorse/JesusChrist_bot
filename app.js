@@ -1,10 +1,21 @@
 const { Telegraf } = require('telegraf');
+const rateLimit = require('telegraf-ratelimit')
+
+const limitConfig = {
+  window: 3000,
+  limit: 1,
+  onLimitExceeded: (ctx, next) => ctx.reply(`Не произноси имени Господа, Бога твоего, напрасно; 
+  ибо Господь не оставит без наказания того, кто произносит имя Его напрасно.`)
+}
+
 const bot = new Telegraf(token);
 
 const Api = require('./api.js');
 const api = new Api();
 
 const schedule = require('node-schedule');
+
+bot.use(rateLimit(limitConfig))
 
 bot.command('start', async ctx => {
     await bot.telegram.sendPhoto(ctx.chat.id, "https://i.pinimg.com/736x/cc/79/af/cc79af14c1de90ded80526e18d4e0975--savior-jesus-christ.jpg")
